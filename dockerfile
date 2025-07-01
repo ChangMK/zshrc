@@ -68,11 +68,19 @@ RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/myuse
 # 設定 oh-my-zsh 預設主題為 powerlevel10k
 RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/myuser/.zshrc
 
+#安裝oh-my-zsh 插件
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone https://github.com/zsh-users/zsh-completions.git   ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
+
+
 # 複製簡單的 powerlevel10k 設定檔，避免首次啟動時互動設定
 		RUN echo '[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh' >> /home/myuser/.zshrc
 
 # 下載簡單的 powerlevel10k 設定檔（可選）
-		RUN curl -fsSL https://github.com/romkatv/powerlevel10k/tree/master/config/p10k-classic.zsh -o /home/myuser/.p10k.zsh
+		RUN curl -fsSL https://raw.githubusercontent.com/romkatv/powerlevel10k/refs/heads/master/config/p10k-rainbow.zsh -o /home/myuser/.p10k.zsh
+
+# 下載 zshrc 
+                    RUN curl -fsSL https://raw.githubusercontent.com/ChangMK/zshrc/refs/heads/main/.zshrc -o /home/myuser/.zshrc
 
 # 安裝 VSCode Server
 		RUN mkdir -p /home/myuser/.vscode-server && \
@@ -91,7 +99,7 @@ RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' /home/myu
 			RUN /bin/bash -c "cd /home/myuser/esp-idf && ./install.sh"
 
 # 設定環境變數，讓 ESP-IDF 工具鏈可用
-			RUN echo 'source /home/myuser/esp-idf/export.sh' >> /home/myuser/.zshrc
+#			RUN echo 'source /home/myuser/esp-idf/export.sh' >> /home/myuser/.zshrc
 
 # 設定權限
 			RUN chown -R myuser:myuser /home/myuser/esp-idf
